@@ -129,17 +129,22 @@ jobs:
     - name: Login to Azure Container Registry
       run:  az acr login --name week07sahithiacr123
 
-        # Build and Push Docker image for Product Service
+    # Build and Push Product Service Image
     - name: Build and Push Product Service Image
+      env:
+        ACR: ${{ secrets.ACR_LOGIN_SERVER }}
       run: |
-        docker build -t ${{ secrets.ACR_LOGIN_SERVER }}/product_service:latest ./backend/product_service/
-        docker push ${{ secrets.ACR_LOGIN_SERVER }}/product_service:latest
+        docker build -t $ACR/product_service:latest ./backend/product_service/
+        docker push $ACR/product_service:latest
 
-    # Build and Push Docker image for Order Service
+    # Build and Push Order Service Image
     - name: Build and Push Order Service Image
+      env:
+        ACR: ${{ secrets.ACR_LOGIN_SERVER }}
       run: |
-        docker build -t ${{ secrets.ACR_LOGIN_SERVER }}/order_service:latest ./backend/order_service/
-        docker push ${{ secrets.ACR_LOGIN_SERVER }}/order_service:latest
+        docker build -t $ACR/order_service:latest ./backend/order_service/
+        docker push $ACR/order_service:latest
+
 
     # Logout from Azure for security (runs even if image push fails)
     - name: Logout from Azure
